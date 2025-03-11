@@ -1,0 +1,44 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV["DB_POOL"] || ENV['RAILS_MAX_THREADS'] || 5 %>
+  host: <%= ENV["POSTGRES_HOST"] %>
+  port: <%= ENV["POSTGRES_PORT"] %>
+  database: <%= ENV["POSTGRES_DB"] %>
+  username: <%= ENV["POSTGRES_USER"] %>
+  password: <%= ENV["POSTGRES_PASSWORD"] %>
+
+development:
+  primary:
+    <<: *default
+  queue:
+    <<: *default
+    database: <%= ENV["POSTGRES_DB"] %>_dev_queue
+    migrations_paths: db/queue_migrate
+  cable:
+    <<: *default
+    database: <%= ENV["POSTGRES_DB"] %>_dev_cable
+    migrations_paths: db/cable_migrate
+
+test:
+  <<: *default
+  database: deepseek_chat_test
+
+production:
+  primary: &primary_production
+    <<: *default
+    database: deepseek_chat_production
+    username: deepseek_chat
+    password: <%= ENV["DEEPSEEK_CHAT_DATABASE_PASSWORD"] %>
+  cache:
+    <<: *primary_production
+    database: deepseek_chat_production_cache
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *primary_production
+    database: deepseek_chat_production_queue
+    migrations_paths: db/queue_migrate
+  cable:
+    <<: *primary_production
+    database: deepseek_chat_production_cable
+    migrations_paths: db/cable_migrate

@@ -1,0 +1,35 @@
+<%= turbo_frame_tag "chat" do %>
+  <div data-form-target="chat">
+    <div class="container my-5">
+      <div class="row justify-content-center">
+        <p class="card-text">
+          <%= @chat.title %>
+        </p>
+        <div class="col-md-7">
+          <!-- Блок с вопросом -->
+          <div class="card mb-4">
+            <div class="card-header bg-blue-200">
+              Question
+            </div>
+            <div class="card-body">
+              <p class="card-text">
+                <%= @chat.content %>
+              </p>
+            </div>
+          </div>
+          <!-- Блок с ответом -->
+          <div class="card mb-5">
+            <div class="card-header bg-green-200">
+              Answer
+            </div>
+            <div class="card-body">
+              <p class="card-text">
+                <%= raw @chat.result %>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
