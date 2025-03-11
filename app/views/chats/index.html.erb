@@ -1,0 +1,39 @@
+<div class="container-fluid" data-controller="form">
+  <div class="row no-gutters">
+    <div class="col-auto left-column">
+      <!-- Содержимое левой колонки -->
+      <div class="p-3">
+        <h3 class="mt-3 custom-title"><b>deepseek's answers</b></h3>
+        <%= link_to "New chat", new_chat_path(@chat), data: { turbo_frame: dom_id(@chat), action: "click->form#hideChat" }, class: "btn btn-secondary mt-4 mb-4" %></p>
+        <% @chats_by_period.each do |period, chats| %>
+          <h5>
+            <%= case period
+                when :today then "Today"
+                when :yesterday then "Yesterday"
+                when :last_7_days then "7 Days"
+                when :last_30_days then "30 Days"
+                end %>
+          </h5>
+          <% if chats.present? %>
+            <ul class="chats overflow-auto p-0">
+              <% chats.each do |chat| %>
+                <li class="list-group-item text-truncate todo-item" data-controller="tooltip" data-bs-toggle="tooltip" data-bs-placement="top" title="<%= chat.content %>">
+                  <%= link_to chat.content, chat_path(chat), data: { turbo_frame: "chat", action: "click->form#hideForm click->form#hideChat" }, class: "text-decoration-none text-reset" %>
+                </li>
+              <% end %>
+            </ul>
+          <% else %>
+            <p>No chats available</p>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+    <div class="col right-column">
+      <%= turbo_frame_tag "chat_frame" do %>
+        <%= turbo_frame_tag "chat" %>
+        <%= turbo_frame_tag @chat %>
+        <%= render template: "chats/new", layout: false %>
+      <% end %>
+    </div>
+  </div>
+</div>

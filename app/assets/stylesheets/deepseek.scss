@@ -1,0 +1,57 @@
+.left-column {
+  width: 300px;
+  background-color: #f8f9fa; /* Светло-серый фон для наглядности */
+  border-right: 1px solid #dee2e6; /* Разделитель */
+  min-height: 100vh; /* Минимальная высота, чтобы занять весь viewport, если контента мало */
+}
+
+/* Для правой колонки, чтобы она занимала оставшееся пространство */
+.right-column {
+  background-color: #e9ecef; /* Другой фон для наглядности */
+}
+
+/* Убираем padding и margin у row по умолчанию, чтобы колонки прилегали */
+.no-gutters {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.no-gutters > [class^="col-"],
+.no-gutters > [class*=" col-"] {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.custom-input {
+  width: 700px;
+}
+
+textarea {
+  overflow: hidden; /* Убираем скролл */
+  resize: none;     /* Отключаем возможность ручного изменения размера */
+}
+
+.svg-container {
+  width: 100px;
+  height: 100px;
+}
+
+.bg-blue-200 {
+  background-color: $blue-200;
+}
+
+.bg-green-200 {
+  background-color: $green-200;
+}
+
+.chats {
+  max-height: 600px;
+}
+
+.custom-title {
+  color: $blue-800;
+}
+
+.todo-item {
+  max-width: 300px;
+}
