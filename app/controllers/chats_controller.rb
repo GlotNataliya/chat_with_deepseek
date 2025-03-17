@@ -1,4 +1,6 @@
 class ChatsController < ApplicationController
+  before_action :chat, only: %i[show]
+
   def index
     @chats = Chat.all
     @chat_last = Chat.last
@@ -8,7 +10,8 @@ class ChatsController < ApplicationController
   end
 
   def show
-    @chat = Chat.find(params[:id])
+    @reasoning_content = chat.reasoning_content
+    @chat_result = chat.result
   end
 
   def new
@@ -19,10 +22,15 @@ class ChatsController < ApplicationController
     @chat = Chat.new(chat_params)
 
     if @chat.save
-      @response = DeepseekApi::DeepseekClient.new.call(chat_params[:content], @chat)
-      html_result = Kramdown::Document.new(@response).to_html
+      response = DeepseekApi::DeepseekClient.new.call(chat_params[:content], @chat)
 
-      @chat.update(result: html_result)
+      reasoning_content = response["reasoning_content"]
+      content = response["content"]
+
+      html_reasoning_content = Kramdown::Document.new(response["reasoning_content"]).to_html if response["reasoning_content"].present?
+      html_content = Kramdown::Document.new(content).to_html
+
+      @chat.update(result: html_content, reasoning_content: html_reasoning_content)
 
       respond_to do |format|
         format.turbo_stream { render turbo_stream: turbo_stream.replace("chat_frame", template: "chats/show") }
@@ -38,7 +46,11 @@ class ChatsController < ApplicationController
   private
 
   def chat_params
-    params.require(:chat).permit(:content, :deepseek_model_name, :role, :temperature, :max_tokens, :stream, :top_p)
+    params.require(:chat).permit(:content, :deepseek_model_name, :deepseek_model_role, :temperature, :max_tokens, :stream, :top_p)
+  end
+
+  def chat
+    @chat ||= Chat.find(params[:id])
   end
 
   def format_periods

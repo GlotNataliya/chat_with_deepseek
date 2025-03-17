@@ -36,8 +36,9 @@ module DeepseekApi
       params = {
         model: object.deepseek_model_name || DEFAULT_MODEL,
         messages: [
-          { role: object.role || "user", content: prompt }   # "json #{prompt}"
+          { role: object.deepseek_model_role || "user", content: prompt }   # "json #{prompt}"
         ],
+        response_format: { type: "text" },
         temperature: object.temperature,
         max_tokens: object.max_tokens,
         top_p: object.top_p,
@@ -54,7 +55,7 @@ module DeepseekApi
     def handle_response(response)
       case response.status
       when 200..299
-        result = response.body.dig("choices", 0, "message", "content")
+        response.body.dig("choices", 0, "message")
       when 400..499
         raise DeepseekApi::Error, "Client error: #{response.status} - #{response.body&.dig('error', 'message') || response.body}"
       when 500..599

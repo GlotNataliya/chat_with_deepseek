@@ -17,7 +17,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_06_165001) do
   create_table "chats", force: :cascade do |t|
     t.string "title"
     t.string "deepseek_model_name"
-    t.string "role"
+    t.string "deepseek_model_role"
     t.text "content"
     t.float "temperature"
     t.integer "max_tokens"

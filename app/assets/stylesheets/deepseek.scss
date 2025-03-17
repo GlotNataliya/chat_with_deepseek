@@ -1,25 +1,27 @@
+$bg-color-left-column: #f8f9fa;
+$bg-color-right-column: #e9ecef;
+$border-left-column: #dee2e6;
+
 .left-column {
+  background-color: $bg-color-left-column;
+  border-right: 1px solid $border-left-column;
+  min-height: 100vh;
   width: 300px;
-  background-color: #f8f9fa; /* Светло-серый фон для наглядности */
-  border-right: 1px solid #dee2e6; /* Разделитель */
-  min-height: 100vh; /* Минимальная высота, чтобы занять весь viewport, если контента мало */
 }
 
-/* Для правой колонки, чтобы она занимала оставшееся пространство */
 .right-column {
-  background-color: #e9ecef; /* Другой фон для наглядности */
+  background-color: $bg-color-right-column;
 }
 
-/* Убираем padding и margin у row по умолчанию, чтобы колонки прилегали */
 .no-gutters {
-  padding-right: 0;
   padding-left: 0;
+  padding-right: 0;
 }
 
 .no-gutters > [class^="col-"],
 .no-gutters > [class*=" col-"] {
-  padding-right: 0;
   padding-left: 0;
+  padding-right: 0;
 }
 
 .custom-input {
@@ -27,13 +29,8 @@
 }
 
 textarea {
-  overflow: hidden; /* Убираем скролл */
-  resize: none;     /* Отключаем возможность ручного изменения размера */
-}
-
-.svg-container {
-  width: 100px;
-  height: 100px;
+  overflow: hidden;
+  resize: none;
 }
 
 .bg-blue-200 {
@@ -42,6 +39,10 @@ textarea {
 
 .bg-green-200 {
   background-color: $green-200;
+}
+
+.bg-orange-200 {
+  background-color: $orange-200;
 }
 
 .chats {

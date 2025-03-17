@@ -17,6 +17,19 @@
               </p>
             </div>
           </div>
+          <!-- Блок рассуждения -->
+          <% if @reasoning_content.present?  %>
+            <div class="card mb-5">
+              <div class="card-header bg-orange-200">
+                Reasoning
+              </div>
+              <div class="card-body">
+                <p class="card-text text-muted">
+                  <%= raw @reasoning_content %>
+                </p>
+              </div>
+            </div>
+          <% end %>
           <!-- Блок с ответом -->
           <div class="card mb-5">
             <div class="card-header bg-green-200">
@@ -24,7 +37,7 @@
             </div>
             <div class="card-body">
               <p class="card-text">
-                <%= raw @chat.result %>
+                <%= raw @chat_result %>
               </p>
             </div>
           </div>
