@@ -24,6 +24,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_06_165001) do
     t.float "top_p"
     t.boolean "stream"
     t.jsonb "result"
+    t.text "reasoning_content"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
