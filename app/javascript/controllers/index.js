@@ -4,14 +4,23 @@
 
 import { application } from "./application"
 
+import ActiveLinkController from "./active_link_controller"
+application.register("active-link", ActiveLinkController)
+
 import AutosizeTextareaController from "./autosize_textarea_controller"
 application.register("autosize-textarea", AutosizeTextareaController)
+
+import DisableFieldsController from "./disable_fields_controller"
+application.register("disable-fields", DisableFieldsController)
 
 import FormController from "./form_controller"
 application.register("form", FormController)
 
 import HelloController from "./hello_controller"
 application.register("hello", HelloController)
+
+import ModalController from "./modal_controller"
+application.register("modal", ModalController)
 
 import TooltipController from "./tooltip_controller"
 application.register("tooltip", TooltipController)

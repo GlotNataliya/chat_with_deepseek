@@ -33,7 +33,7 @@ module DeepseekApi
     end
 
     def build_request_body(prompt, object)
-      params = {
+      {
         model: object.deepseek_model_name || DEFAULT_MODEL,
         messages: [
           { role: object.deepseek_model_role || "user", content: prompt }   # "json #{prompt}"
@@ -44,12 +44,6 @@ module DeepseekApi
         top_p: object.top_p,
         stream: object.stream
       }
-
-      # params.merge!(
-      #   response_format: { type: "json_object" }
-      # ) if object.deepseek_model_name == "deepseek-chat"
-
-      params
     end
 
     def handle_response(response)

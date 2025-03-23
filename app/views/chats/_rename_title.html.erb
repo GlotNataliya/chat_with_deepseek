@@ -1,0 +1,13 @@
+<%= turbo_frame_tag "rename_frame" do %>
+  <%= form_with(model: @chat, local: true) do |form| %>
+    <div>
+      <%= form.text_field :title, class: "form-control" %>
+    </div>
+
+    <div class="d-flex flex-column">
+      <%= button_tag(type: 'submit', data: { action:"modal#toggleMenu" }, class: 'btn btn-secondary mt-2') do %>
+        <i class="bi bi-send"></i>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>

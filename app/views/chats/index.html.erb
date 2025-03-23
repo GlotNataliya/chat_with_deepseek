@@ -10,13 +10,9 @@
             <%= format_period_name(period) %>
           </h5>
           <% if chats.present? %>
-            <ul class="chats overflow-auto p-0">
-              <% chats.each do |chat| %>
-                <li class="list-group-item text-truncate todo-item" data-controller="tooltip" data-bs-toggle="tooltip" data-bs-placement="top" title="<%= chat.content %>">
-                  <%= link_to chat.content, chat_path(chat), data: { turbo_frame: "chat", action: "click->form#hideForm click->form#hideChat" }, class: "text-decoration-none text-reset" %>
-                </li>
-              <% end %>
-            </ul>
+            <div id="chat-list">
+              <%= render "chats/chat_list", chats: chats %>
+            </div>
           <% else %>
             <p>No chats available</p>
           <% end %>

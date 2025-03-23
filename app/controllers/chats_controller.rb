@@ -1,5 +1,5 @@
 class ChatsController < ApplicationController
-  before_action :chat, only: %i[show]
+  before_action :chat, only: %i[show edit update destroy]
 
   def index
     @chats = Chat.all
@@ -11,12 +11,14 @@ class ChatsController < ApplicationController
 
   def show
     @reasoning_content = chat.reasoning_content
-    @chat_result = chat.result
+    @answer_content = chat.result
   end
 
   def new
     @chat = Chat.new
   end
+
+  def edit; end
 
   def create
     @chat = Chat.new(chat_params)
@@ -24,29 +26,48 @@ class ChatsController < ApplicationController
     if @chat.save
       response = DeepseekApi::DeepseekClient.new.call(chat_params[:content], @chat)
 
-      reasoning_content = response["reasoning_content"]
-      content = response["content"]
+      @reasoning_content = Kramdown::Document.new(response["reasoning_content"]).to_html if response["reasoning_content"].present?
+      @answer_content = Kramdown::Document.new(response["content"]).to_html
 
-      html_reasoning_content = Kramdown::Document.new(response["reasoning_content"]).to_html if response["reasoning_content"].present?
-      html_content = Kramdown::Document.new(content).to_html
-
-      @chat.update(result: html_content, reasoning_content: html_reasoning_content)
+      @chat.update(result: @answer_content, reasoning_content: @reasoning_content)
 
       respond_to do |format|
-        format.turbo_stream { render turbo_stream: turbo_stream.replace("chat_frame", template: "chats/show") }
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace("chat_frame", template: "chats/show")
+          ]
+        end
         format.html { redirect_to chat_path(@chat), status: :see_other }
       end
-
-      # redirect_to chat_path(@chat)
     else
       render :new, status: :unprocessable_entity
     end
   end
 
+  def update
+    if chat.update(title: chat_params[:title])
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace("rename_frame", partial: "chats/rename_title", locals: { chat: chat })
+          ]
+        end
+        format.html { redirect_to chats_path, status: :see_other }
+      end
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    chat.destroy
+    redirect_to chats_path
+  end
+
   private
 
   def chat_params
-    params.require(:chat).permit(:content, :deepseek_model_name, :deepseek_model_role, :temperature, :max_tokens, :stream, :top_p)
+    params.require(:chat).permit(:title, :content, :deepseek_model_name, :deepseek_model_role, :temperature, :max_tokens, :stream, :top_p)
   end
 
   def chat

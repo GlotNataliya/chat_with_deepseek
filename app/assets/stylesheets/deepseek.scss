@@ -1,12 +1,14 @@
 $bg-color-left-column: #f8f9fa;
 $bg-color-right-column: #e9ecef;
 $border-left-column: #dee2e6;
+$modal-border-color: #ccc;
+$modal-box-shadow: 0 2px 8px rgba(0, 0, 0, .2);
 
 .left-column {
   background-color: $bg-color-left-column;
   border-right: 1px solid $border-left-column;
   min-height: 100vh;
-  width: 300px;
+  width: 340px;
 }
 
 .right-column {
@@ -55,4 +57,36 @@ textarea {
 
 .todo-item {
   max-width: 300px;
+}
+
+.btn-custom {
+  width: 120px;
+}
+
+.chat-modal {
+  padding: 8px;
+  position: relative;
+}
+
+.options-btn {
+  background: none;
+  border: 0;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.options-modal {
+  background: $white;
+  border: 1px solid $modal-border-color;
+  border-radius: 4px;
+  box-shadow: $modal-box-shadow;
+  max-height: 150px;
+  padding: 6px 8px;
+  position: fixed;
+  width: 300px;
+  z-index: 1000;
+}
+
+.hidden {
+  display: none;
 }
