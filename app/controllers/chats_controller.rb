@@ -46,14 +46,7 @@ class ChatsController < ApplicationController
 
   def update
     if chat.update(title: chat_params[:title])
-      respond_to do |format|
-        format.turbo_stream do
-          render turbo_stream: [
-            turbo_stream.replace("rename_frame", partial: "chats/rename_title", locals: { chat: chat })
-          ]
-        end
-        format.html { redirect_to chats_path, status: :see_other }
-      end
+      redirect_to chats_path, status: :see_other
     else
       render :edit, status: :unprocessable_entity
     end

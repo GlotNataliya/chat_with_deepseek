@@ -2,6 +2,8 @@ class Chat < ApplicationRecord
   extend Enumerize
   include ChatsHelper
 
+  broadcasts_to ->(chat) { "chats" }, inserts_by: :prepend
+
   enumerize :deepseek_model_name, in: [ "deepseek-chat", "deepseek-reasoner" ]
   enumerize :deepseek_model_role, in: [ :user, :assistant, :system, :function ]
 

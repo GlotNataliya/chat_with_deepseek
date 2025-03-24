@@ -10,7 +10,8 @@
             <%= format_period_name(period) %>
           </h5>
           <% if chats.present? %>
-            <div id="chat-list">
+            <%= turbo_stream_from "chats" %>
+            <div id="chats">
               <%= render "chats/chat_list", chats: chats %>
             </div>
           <% else %>

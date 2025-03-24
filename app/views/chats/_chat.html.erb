@@ -1,0 +1,17 @@
+<li class="col-auto chat-modal list-unstyled" data-modal-target="item" id="<%= dom_id(chat) %>">
+  <%= link_to truncate((chat.title || chat.content), omission: ''), chat_path(chat), data: { turbo_frame: "chat", action: "click->form#hideForm click->form#hideChat" },
+                                                                      class: "text-decoration-none text-reset" %>
+  <button type="button" data-action="modal#toggleMenu" class="btn options-btn">
+    <%= image_tag "three-dots-16.png" %>
+  </button>
+  <div class="options-modal hidden rounded" data-modal-target="menu">
+    <div class="d-flex flex-column justify-content-center align-items-center gap-2">
+      <%= turbo_frame_tag "rename_frame" do %>
+        <%= link_to "✏️ Rename", edit_chat_path(chat), class: "btn btn-secondary btn-sm btn-custom" %>
+      <% end %>
+      <%= link_to "🗑️ Delete", chat_path(chat),
+                  data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
+                  class: "btn btn-danger btn-sm btn-custom" %>
+    </div>
+  </div>
+</li>
