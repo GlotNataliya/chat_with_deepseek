@@ -26,6 +26,8 @@ $modal-box-shadow: 0 2px 8px rgba(0, 0, 0, .2);
 }
 
 .custom-input {
+  border: 1px solid $modal-border-color;
+  box-shadow: $modal-box-shadow;
   width: 700px;
 }
 
