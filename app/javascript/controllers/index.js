@@ -13,9 +13,6 @@ application.register("autosize-textarea", AutosizeTextareaController)
 import DisableFieldsController from "./disable_fields_controller"
 application.register("disable-fields", DisableFieldsController)
 
-import FormController from "./form_controller"
-application.register("form", FormController)
-
 import HelloController from "./hello_controller"
 application.register("hello", HelloController)
 

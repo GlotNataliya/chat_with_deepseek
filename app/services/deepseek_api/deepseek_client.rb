@@ -8,12 +8,16 @@ module DeepseekApi
       validate_api_key!
     end
 
-    def call(prompt, object)
-      connection.post("/chat/completions", build_request_body(prompt, object)).then do |response|
+    def call(prompt, deepseek_model_role, object, messages_data = nil)
+      connection.post("/chat/completions", build_request_body(prompt, deepseek_model_role, object, messages_data)).then do |response|
         handle_response(response)
       end
-    rescue Faraday::Error => e
-      handle_error(e)
+      rescue Faraday::Error => e
+        handle_error(e)
+      rescue Net::ReadTimeout => e
+        handle_timeout_error(e)
+      rescue StandardError => e
+        handle_general_error(e)
     end
 
     private
@@ -32,11 +36,11 @@ module DeepseekApi
       end
     end
 
-    def build_request_body(prompt, object)
-      {
+    def build_request_body(prompt, deepseek_model_role, object, messages_data)
+      deepseek_settings = {
         model: object.deepseek_model_name || DEFAULT_MODEL,
         messages: [
-          { role: object.deepseek_model_role || "user", content: prompt }   # "json #{prompt}"
+          { role: deepseek_model_role || "user", content: prompt }
         ],
         response_format: { type: "text" },
         temperature: object.temperature,
@@ -44,6 +48,9 @@ module DeepseekApi
         top_p: object.top_p,
         stream: object.stream
       }
+      deepseek_settings[:messages].unshift(*messages_data) if messages_data.present?
+
+      deepseek_settings
     end
 
     def handle_response(response)
@@ -61,7 +68,14 @@ module DeepseekApi
 
     def handle_error(error)
       Rails.logger.error("Deepseek API Error: #{error.message}")
-      raise "Service unavailable: #{error.message}"
+    end
+
+    def handle_timeout_error(error)
+      Rails.logger.error("Timeout Error: #{error.message}")
+    end
+
+    def handle_general_error(error)
+      Rails.logger.error("Unexpected Error: #{error.message}")
     end
 
     def validate_api_key!

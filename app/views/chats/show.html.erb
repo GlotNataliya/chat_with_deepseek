@@ -1,48 +1,56 @@
-<%= turbo_frame_tag "chat" do %>
-  <div data-form-target="chat">
-    <div class="container my-5">
-      <div class="row justify-content-center">
+<%= turbo_frame_tag "chat_frame" do %>
+  <div class="container my-5">
+    <div class="row justify-content-center">
+      <% if defined?(@chat) %>
         <h4 class="card-text text-center  mt-2 mb-3 ">
           <%= @chat.title %>
         </h4>
-        <div class="col-md-7">
-          <!-- Блок с вопросом -->
-          <div class="card mb-4">
-            <div class="card-header bg-blue-200">
-              Question
-            </div>
-            <div class="card-body">
-              <p class="card-text">
-                <%= @chat.content %>
-              </p>
-            </div>
-          </div>
-          <!-- Блок рассуждения -->
-          <% if @reasoning_content.present?  %>
-            <div class="card mb-5">
-              <div class="card-header bg-orange-200">
-                Reasoning
+        <% @chat.messages.each do |message| %>
+          <div class="col-md-7">
+            <!-- Блок с вопросом -->
+            <div class="card mb-4">
+              <div class="card-header bg-blue-200">
+                Question
               </div>
               <div class="card-body">
-                <p class="card-text text-muted">
-                  <%= raw @reasoning_content %>
+                <div class="card-text">
+                  <%= message.content %>
+                </div>
+              </div>
+            </div>
+            <!-- Блок рассуждения -->
+            <% if message.reasoning_content.present?  %>
+              <div class="card mb-5">
+                <div class="card-header bg-orange-200">
+                  Reasoning
+                </div>
+                <div class="card-body">
+                  <p class="card-text text-muted">
+                    <%= sanitize message.reasoning_content %>
+                  </p>
+                </div>
+              </div>
+            <% end %>
+            <!-- Блок с ответом -->
+            <div class="card mb-5">
+              <div class="card-header bg-green-200">
+                Answer
+              </div>
+              <div class="card-body">
+                <p class="card-text">
+                  <%= sanitize message.result %>
                 </p>
               </div>
             </div>
-          <% end %>
-          <!-- Блок с ответом -->
-          <div class="card mb-5">
-            <div class="card-header bg-green-200">
-              Answer
-            </div>
-            <div class="card-body">
-              <p class="card-text">
-                <%= raw @answer_content %>
-              </p>
-            </div>
           </div>
-        </div>
+        <% end %>
+      <% else %>
+        <h4 class="card-text text-center  mt-2 mb-3 ">No chats</h4>
+      <% end %>
+      <div class="md-5 text-center">
+        <%= link_to "New chat", new_chat_path(@new_chat), data: { turbo_frame: "chat_frame" }, class: "btn btn-secondary mb-5" %></p>
       </div>
+      <%= render 'messages/form', chat: @chat %>
     </div>
   </div>
 <% end %>

@@ -1,17 +1,13 @@
-<%= turbo_frame_tag @chat do %>
-  <div data-form-target="chat">
-    <div class="d-flex flex-column justify-content-center align-items-center mt-5">
-      <div class="row align-items-center p-3 mb-3">
-        <div class="col-auto">
-          <%= image_tag "deepseek.png", alt: 'Описание изображения', size: "47x47", class: 'img-fluid' %>
-        </div>
-        <div class="col-auto">
-          <h3>Hi, I'm DeepSeek.</h3>
-        </div>
+<%= turbo_frame_tag "chat_frame" do %>
+  <div class="d-flex flex-column justify-content-center align-items-center mt-5">
+    <div class="row align-items-center p-3 mb-3">
+      <div class="col-auto">
+        <%= image_tag "deepseek.png", alt: 'Описание изображения', size: "47x47", class: 'img-fluid' %>
       </div>
-      <div class="p-5 rounded-5 custom-input bg-light">
-        <%= render "form" %>
+      <div class="col-auto">
+        <h3>Hi, I'm DeepSeek.</h3>
       </div>
     </div>
+    <%= render "form" %>
   </div>
 <% end %>

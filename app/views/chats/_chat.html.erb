@@ -1,12 +1,13 @@
 <li class="col-auto chat-modal list-unstyled"
-    data-modal-target="item" id="<%= dom_id(chat) %>"
+    data-modal-target="item"
+    id="<%= dom_id(chat) %>"
     data-controller="tooltip"
     data-bs-toggle="tooltip"
     data-bs-placement="right"
-    title="<%= chat.content %>">
-  <%= link_to truncate((chat.title || chat.content), omission: ''), chat_path(chat), data: { turbo_frame: "chat",
-                                                            action: "click->form#hideForm click->form#hideChat" },
-                                                                      class: "text-decoration-none text-reset" %>
+    title="<%= chat.messages.first&.content %>">
+  <%= link_to truncate((chat.title || chat.messages.first&.content), omission: ''), chat_path(chat),
+                                                                  data: { turbo_frame: "chat_frame", },
+                                                                  class: "text-decoration-none text-reset" %>
   <button type="button" data-action="modal#toggleMenu" class="btn options-btn">
     <%= image_tag "three-dots-16.png" %>
   </button>
