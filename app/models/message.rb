@@ -10,6 +10,7 @@ class Message < ApplicationRecord
   enumerize :deepseek_model_role, in: [ :user, :assistant, :system, :function ]
 
   # validates :deepseek_model_role, :content, presence: true
+
   def self.role_choices
     deepseek_model_role.values.map { |k| [ k.humanize.downcase, k ] }
   end

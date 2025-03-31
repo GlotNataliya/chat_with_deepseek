@@ -1,6 +1,6 @@
 module DeepseekApi
   class DeepseekClient
-    API_BASE_URL = "https://api.deepseek.com/v1".freeze
+    API_BASE_URL = "https://api.deepseek.com".freeze
     DEFAULT_MODEL = "deepseek-chat".freeze
 
     def initialize
