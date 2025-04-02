@@ -48,7 +48,7 @@ gem "faraday"
 
 gem "enumerize"
 
-gem "kramdown", "~> 2.5", ">= 2.5.1"
+gem "commonmarker"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

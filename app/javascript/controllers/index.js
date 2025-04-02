@@ -19,5 +19,8 @@ application.register("hello", HelloController)
 import ModalController from "./modal_controller"
 application.register("modal", ModalController)
 
+import SelectAssistantController from "./select_assistant_controller"
+application.register("select-assistant", SelectAssistantController)
+
 import TooltipController from "./tooltip_controller"
 application.register("tooltip", TooltipController)
