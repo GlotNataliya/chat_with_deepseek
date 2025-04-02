@@ -48,20 +48,17 @@ class ChatsController < ApplicationController
 
     if @chat.valid?
       @chat.save
+      message = @chat.messages.last
 
-      content =  @chat.messages.last.content
-      deepseek_model_role = @chat.messages.last.deepseek_model_role
-      settings = @chat.messages.last.setting
-
-      response = DeepseekApi::DeepseekClient.new.call(content, deepseek_model_role, settings)
+      response = DeepseekApi::DeepseekClient.new.call(message)
 
       if response["reasoning_content"].present?
-        reasoning_content = Kramdown::Document.new(response["reasoning_content"]).to_html
+        reasoning_content = Commonmarker.to_html(response["reasoning_content"], options: { parse: { smart: true } })
       end
 
-      answer_content = Kramdown::Document.new(response["content"]).to_html
+      answer_content = Commonmarker.to_html(response["content"], options: { parse: { smart: true } })
 
-      @chat.messages.last.update(content: content, result: answer_content, reasoning_content: reasoning_content)
+      @chat.messages.last.update(content: message.content, result: answer_content, reasoning_content: reasoning_content)
 
       respond_to do |format|
         format.turbo_stream do
@@ -93,7 +90,7 @@ class ChatsController < ApplicationController
 
   def chat_params
     params.require(:chat).permit(:title,
-      messages_attributes: [ :id, :deepseek_model_role, :content, :result, :reasoning_content, :_destroy,
+      messages_attributes: [ :id, :deepseek_model_role, :content, :result, :reasoning_content, :add_assistant, :assistant_prompt, :_destroy,
       setting_attributes: [ :id, :deepseek_model_name, :temperature, :max_tokens, :top_p, :stream, :_destroy ] ])
   end
 

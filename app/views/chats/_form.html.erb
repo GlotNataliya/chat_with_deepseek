@@ -1,7 +1,61 @@
 <div class="p-5 rounded-5 custom-input bg-light mb-5">
   <%= form_with(model: @chat, local: true) do |f| %>
     <%= f.fields_for :messages do |message_form| %>
-      <%= render "chats/common_message_form", message_form: message_form %>
+      <div class="form-group" data-controller="autosize-textarea">
+        <%= message_form.text_area :content, rows: 2, required: true, placeholder: "Message DeepSeek",
+                                    class: "form-control",
+                                    data: { "autosize-textarea-target": "textarea",
+                                    action: "input->autosize-textarea#adjustHeight" }
+        %>
+      </div>
+      <div class="accordion accordion-flush mt-3 rounded-5" id="accordionFlushExample">
+        <div class="accordion-item mb-2">
+          <h2 class="accordion-header" id="flush-headingOne">
+            <button class="accordion-button collapsed"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#flush-collapseOne"
+                    aria-expanded="false"
+                    aria-controls="flush-collapseOne">
+              Settings
+            </button>
+          </h2>
+          <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+            <div class="accordion-body" data-controller="disable-fields select-assistant">
+              <div class="form-group row">
+                <%= message_form.label :role, class: "col-sm-4 col-form-label" %>
+                <div class="col-sm-6">
+                  <%= message_form.select :deepseek_model_role, Message.role_choices, {}, value: "user", class: "form-select mb-3" %>
+                </div>
+              </div>
+              <div class="form-group row">
+                <%= message_form.label :add_assistant_prompt, class: "col-sm-4 col-form-label" %>
+                <div class="col-sm-3">
+                  <%= message_form.select :add_assistant, [['no', false], ['yes', true]], {},
+                                          data: { action: "select-assistant#toggle", select_assistant_target: "selector", value: false },
+                                          class: "form-select mb-3" %>
+                </div>
+              </div>
+              <div class="form-group row hidden" data-select-assistant-target="field" data-controller="autosize-textarea">
+                <%= message_form.label :assistant_prompt, class: "col-sm-4 col-form-label" %>
+                <div class="col-sm-6">
+                  <%= message_form.text_area :assistant_prompt, rows: 2, required: true,
+                                    value: "You are a helpful AI assistant who responds politely and briefly. And at the end, wish a good day.",
+                                    class: "form-control mb-3",
+                                    data: { "autosize-textarea-target": "textarea",
+                                    action: "input->autosize-textarea#adjustHeight" } %>
+                </div>
+              </div>
+              <%= render "chats/common_form_setting", f: message_form %>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex flex-column">
+        <%= button_tag(type: 'submit', class: 'btn btn-secondary mt-2') do %>
+          <i class="bi bi-send"></i>
+        <% end %>
+      </div>
     <% end %>
   <% end %>
 </div>

@@ -7,8 +7,6 @@ class MessagesController < ApplicationController
     if @message.valid?
       @message.save
       content =  @message.content
-      deepseek_model_role = @message.deepseek_model_role
-      setting = @message.setting
       previous_messages = @chat.messages.where("id < ?", @chat.messages.maximum(:id))
       messages_data = previous_messages.pluck(:deepseek_model_role, :content, :result).flat_map do |role, content, result|
         [
@@ -17,13 +15,13 @@ class MessagesController < ApplicationController
         ]
       end
 
-      response = DeepseekApi::DeepseekClient.new.call(content, deepseek_model_role, setting, messages_data)
+      response = DeepseekApi::DeepseekClient.new.call(@message, messages_data)
 
       if response["reasoning_content"].present?
-        reasoning_content = Kramdown::Document.new(response["reasoning_content"]).to_html
+        reasoning_content = Commonmarker.to_html(response["reasoning_content"], options: { parse: { smart: true } })
       end
 
-      answer_content = Kramdown::Document.new(response["content"]).to_html
+      answer_content = Commonmarker.to_html(response["content"], options: { parse: { smart: true } })
 
       @message.update(content: content, result: answer_content, reasoning_content: reasoning_content)
 
@@ -48,6 +46,7 @@ class MessagesController < ApplicationController
 
   def message_params
     params.require(:message).permit(:chat_id, :deepseek_model_role, :content, :result, :reasoning_content,
+                                    :add_assistant, :assistant_prompt,
             setting_attributes: [ :id, :deepseek_model_name, :temperature, :max_tokens, :top_p, :stream, :_destroy ])
   end
 end

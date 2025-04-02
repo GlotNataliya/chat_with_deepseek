@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_29_185855) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_01_165548) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -28,6 +28,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_29_185855) do
     t.text "reasoning_content"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "add_assistant", default: false
+    t.text "assistant_prompt"
     t.index ["chat_id"], name: "index_messages_on_chat_id"
   end
 

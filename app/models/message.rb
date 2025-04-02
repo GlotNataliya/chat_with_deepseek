@@ -7,7 +7,7 @@ class Message < ApplicationRecord
 
   accepts_nested_attributes_for :setting, allow_destroy: true
 
-  enumerize :deepseek_model_role, in: [ :user, :assistant, :system, :function ]
+  enumerize :deepseek_model_role, in: [ :user, :assistant, :function ]
 
   # validates :deepseek_model_role, :content, presence: true
 

@@ -1,6 +1,6 @@
 module DeepseekApi
   class DeepseekClient
-    API_BASE_URL = "https://api.deepseek.com".freeze
+    API_BASE_URL = "https://api.deepseek.com/v1".freeze
     DEFAULT_MODEL = "deepseek-chat".freeze
 
     def initialize
@@ -8,8 +8,8 @@ module DeepseekApi
       validate_api_key!
     end
 
-    def call(prompt, deepseek_model_role, object, messages_data = nil)
-      connection.post("/chat/completions", build_request_body(prompt, deepseek_model_role, object, messages_data)).then do |response|
+    def call(message, messages_data = nil)
+      connection.post("/chat/completions", build_request_body(message, messages_data)).then do |response|
         handle_response(response)
       end
       rescue Faraday::Error => e
@@ -36,20 +36,34 @@ module DeepseekApi
       end
     end
 
-    def build_request_body(prompt, deepseek_model_role, object, messages_data)
+    def build_request_body(message, messages_data)
+      setting = message.setting
+      deepseek_model_role = message.deepseek_model_role
+      first_message = message.chat.messages.first
       deepseek_settings = {
-        model: object.deepseek_model_name || DEFAULT_MODEL,
-        messages: [
-          { role: deepseek_model_role || "user", content: prompt }
-        ],
+        model: setting.deepseek_model_name || DEFAULT_MODEL,
         response_format: { type: "text" },
-        temperature: object.temperature,
-        max_tokens: object.max_tokens,
-        top_p: object.top_p,
-        stream: object.stream
+        temperature: setting.temperature,
+        max_tokens: setting.max_tokens,
+        top_p: setting.top_p,
+        stream: setting.stream
       }
-      deepseek_settings[:messages].unshift(*messages_data) if messages_data.present?
 
+      if message.add_assistant == true
+        deepseek_settings[:messages] = [
+          { role: "system", content: message.assistant_prompt },
+          { role: deepseek_model_role || "user", content: message.content }
+        ]
+      else
+        deepseek_settings[:messages] = [ { role: deepseek_model_role || "user", content: message.content } ]
+      end
+
+      if first_message.add_assistant == true && messages_data.present?
+        deepseek_settings[:messages].unshift(*messages_data)
+        deepseek_settings[:messages].unshift({ role: "system", content: first_message.assistant_prompt })
+      elsif messages_data.present?
+        deepseek_settings[:messages].unshift(*messages_data)
+      end
       deepseek_settings
     end
 
